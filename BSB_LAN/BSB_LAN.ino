@@ -517,6 +517,9 @@ EEPROMClass EEPROM_ESP("nvs", EEPROM_SIZE);
 #ifdef MQTT
 #include "src/PubSubClient/src/PubSubClient.h"
 #endif
+#ifdef MQTTv2
+#include "src/MQTTv2/mqttv2.h"
+#endif
 #include "html_strings.h"
 
 #ifdef BME280
@@ -642,6 +645,9 @@ ComClient *max_cul;
 
 #ifdef MQTT
 PubSubClient *MQTTPubSubClient;
+#endif
+#ifdef MQTTv2
+MQTTv2 *mqtt;
 #endif
 bool haveTelnetClient = false;
 
@@ -3957,6 +3963,14 @@ void generateConfigPage(void) {
   #define ANY_MODULE_COMPILED
   #endif
   "MQTT"
+  #endif
+  #ifdef MQTTv2
+  #if defined (ANY_MODULE_COMPILED)
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  "MQTTv2"
   #endif
   #ifdef LOGGER
   #if defined (ANY_MODULE_COMPILED)
@@ -9399,6 +9413,7 @@ boolean mqtt_connect() {
  * Global resources used:
  *   none
  */
+
 #ifdef MQTT
 const String mqtt_get_will_topic() {
   // Build (Last) Will Topic
